@@ -19,8 +19,10 @@ ZECUSD: 404.994400 @ $103.395255
 LTCUSD: 526.968916 @ $93.806625
 ```
 
-
+## reference
+### trade
 ```json
+# trade
 {
    "price":"7557.00",
    "amount":"0.02644552",
