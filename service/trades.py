@@ -1,21 +1,19 @@
-import gemini
-import json
-import logging as log
+from .gemini_client import GeminiClient
 import os
-from datetime import datetime
 
-class TradeHistoryService:
+class TradeHistoryService(GeminiClient):
     def __init__(self):
-        self._auditor_api_key = os.getenv("AUDITOR_API_KEY")
-        self._auditor_api_secret = os.getenv("AUDITOR_API_SECRET")
-        self._public_client = gemini.PublicClient()
-        self._private_client = gemini.PrivateClient(self._auditor_api_key, self._auditor_api_secret)
+        super().__init__(
+            api_key     = os.getenv("AUDITOR_API_KEY"), 
+            api_secret  = os.getenv("AUDITOR_API_SECRET"), 
+            sandbox     = False
+        )
 
     def calculate_total_investment(self, symbol):
-        past_trades = self._private_client.get_past_trades(symbol)
+        past_trades = self.private_client.get_past_trades(symbol)
         total_investment = 0
         for trade in past_trades:
-            trade_date = datetime.fromtimestamp(trade['timestamp'])
+            trade_date = self.timestamp_to_datetime(trade['timestamp'])
             amount = float(trade['amount'])
             price = float(trade['price'])
             fee_amount = float(trade['fee_amount'])
@@ -24,11 +22,11 @@ class TradeHistoryService:
         
 
     def calculate_avg_price(self, symbol):
-        past_trades = self._private_client.get_past_trades(symbol)
+        past_trades = self.private_client.get_past_trades(symbol)
         nominator = 0
         denominator = 0
         for trade in past_trades:
-            trade_date = datetime.fromtimestamp(trade['timestamp'])
+            trade_date = self.timestamp_to_datetime(trade['timestamp'])
             amount = float(trade['amount'])
             price = float(trade['price'])
 

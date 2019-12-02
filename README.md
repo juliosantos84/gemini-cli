@@ -19,8 +19,9 @@ export AUDITOR_API_SECRET="GEMINI_API_SECRET"
 
 ### trade_history
 
-Use `print_investment_summary(['BTCUSD','ETHUSD', 'ZECUSD', 'LTCUSD'])` to retrieve an investment summary:
+Use `python main.py` to retrieve an investment summary:
 ```bash
+Investment Summary
 BTCUSD: 318.438659 @ $6226.876005
 ETHUSD: 578.725639 @ $231.782748
 ZECUSD: 404.994400 @ $103.395255
