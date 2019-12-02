@@ -1,2 +1,3 @@
 .gemini-cli/
 .vscode/
+**/__pycache__/

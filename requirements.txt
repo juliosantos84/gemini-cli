@@ -1,1 +1,1 @@
-gemini-client=0.2.0
+gemini-python==0.2.0

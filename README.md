@@ -1,6 +1,14 @@
 # gemini-cli
 
 ## setup
+1. create a virtual environment
+```bash
+virtualenv -p <PATH_TO_PYTHON3> .gemini-cli && source .gemini-cli/bin/activate
+```
+1. install requirements
+```bash
+pip3 install -r requirements.txt
+```
 - Configure API secrets
 ```bash
 export AUDITOR_API_KEY="GEMINI_API_KEY"
