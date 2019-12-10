@@ -41,5 +41,10 @@ class TradeHistoryService(GeminiClient):
         for symbol in symbols:
             avg_price = self.calculate_avg_price(symbol)
             total_investment = self.calculate_total_investment(symbol)
-            print ("%s: %f @ $%f" % (symbol, total_investment, avg_price))
+            ticker = self.public_client.get_ticker(symbol)
+            # bid = ticker['bid']
+            # ask = ticker['ask']
+            last = ticker['last']
+            label = 'good' if float(last) >= avg_price else 'bad'
+            print ("%s: %f @ $%f (%s)" % (symbol, total_investment, avg_price, label))
 
