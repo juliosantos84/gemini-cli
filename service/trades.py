@@ -9,7 +9,14 @@ class TradeHistoryService(GeminiClient):
             sandbox     = False
         )
 
-    def calculate_total_investment(self, symbol):
+    def calculate_total_crypto_investment(self, symbol):
+        past_trades = self.private_client.get_past_trades(symbol)
+        total_investment = 0.0
+        for trade in past_trades:
+            total_investment += float(trade['amount'])
+        return total_investment
+
+    def calculate_total_fiat_investment(self, symbol):
         past_trades = self.private_client.get_past_trades(symbol)
         total_investment = 0
         for trade in past_trades:
@@ -37,14 +44,27 @@ class TradeHistoryService(GeminiClient):
         return avg_price
 
     def print_investment_summary(self, symbols):
-        print ("Investment Summary")
+        print ("SYMBOL\t\PRINCIPAL\tAVG PRICE\tCUR VALUE\tGAIN/LOSS\tBRK EVEN")
+        total_investment_principal = 0.0
+        total_investment_value = 0.0
         for symbol in symbols:
             avg_price = self.calculate_avg_price(symbol)
-            total_investment = self.calculate_total_investment(symbol)
+            investment_principal = self.calculate_total_fiat_investment(symbol)
+            total_crypto_investment = self.calculate_total_crypto_investment(symbol)
             ticker = self.public_client.get_ticker(symbol)
-            # bid = ticker['bid']
-            # ask = ticker['ask']
-            last = ticker['last']
-            label = 'good' if float(last) >= avg_price else 'bad'
-            print ("%s: %f @ $%f (%s)" % (symbol, total_investment, avg_price, label))
+            last_price = self.get_last_price(symbol)
+
+            investment_value = total_crypto_investment * last_price
+            gain = investment_value - investment_principal
+
+            break_even = investment_principal / total_crypto_investment
+
+            total_investment_principal += investment_principal
+            total_investment_value += investment_value
+
+            print ("%s\t%08.2f\t$%08.2f\t%08.2f\t%08.2f\t%08.2f" % (symbol, investment_principal, avg_price, investment_value, gain, break_even))
+        
+        total_gain = total_investment_value - total_investment_principal
+        total_break_even = total_investment_value - total_investment_principal
+        print ("%s\t%08.2f\t$%08.2f\t%08.2f\t%08.2f\t%08.2f" % ('TOTAL', total_investment_principal, 0.0, total_investment_value, total_gain, total_break_even))
 
