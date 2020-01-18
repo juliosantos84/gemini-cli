@@ -1,0 +1,16 @@
+[
+    {
+        "price":"146.05",
+        "amount":"4.903614",
+        "timestamp":1575154596,
+        "timestampms":1575154596795,
+        "type":"Buy",
+        "aggressor":false,
+        "fee_currency":"USD",
+        "fee_amount":"0.4996219866",
+        "tid":2,
+        "order_id":"2",
+        "exchange":"robinhood",
+        "is_auction_fill":false
+    }
+]

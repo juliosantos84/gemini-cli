@@ -1,23 +1,31 @@
 from .gemini_client import GeminiClient
+from .external_trades import ExternalTradesService
 import os
+import json
 
 class TradeHistoryService(GeminiClient):
     def __init__(self):
         super().__init__(
             api_key     = os.getenv("AUDITOR_API_KEY"), 
             api_secret  = os.getenv("AUDITOR_API_SECRET"), 
-            sandbox     = False
+            sandbox     = False,
         )
+        self._external_trades_service = ExternalTradesService("/Users/julio/Development/gemini-cli/external_orders")
 
-    def calculate_total_crypto_investment(self, symbol):
+    def get_past_trades(self, symbol):
         past_trades = self.private_client.get_past_trades(symbol)
+        external_trades = self._external_trades_service.get_orders(symbol)
+        return past_trades + external_trades
+        
+    def calculate_total_crypto_investment(self, symbol):
+        past_trades = self.get_past_trades(symbol)
         total_investment = 0.0
         for trade in past_trades:
             total_investment += float(trade['amount'])
         return total_investment
 
     def calculate_total_fiat_investment(self, symbol):
-        past_trades = self.private_client.get_past_trades(symbol)
+        past_trades = self.get_past_trades(symbol)
         total_investment = 0
         for trade in past_trades:
             trade_date = self.timestamp_to_datetime(trade['timestamp'])
@@ -29,7 +37,7 @@ class TradeHistoryService(GeminiClient):
         
 
     def calculate_avg_price(self, symbol):
-        past_trades = self.private_client.get_past_trades(symbol)
+        past_trades = self.get_past_trades(symbol)
         nominator = 0
         denominator = 0
         for trade in past_trades:
@@ -44,7 +52,7 @@ class TradeHistoryService(GeminiClient):
         return avg_price
 
     def print_investment_summary(self, symbols):
-        print ("SYMBOL\t\PRINCIPAL\tAVG PRICE\tCUR VALUE\tGAIN/LOSS\tBRK EVEN")
+        print ("SYMBOL\tPRINCIPAL\tAVG PRICE\tCUR VALUE\tGAIN/LOSS\tBRK EVEN")
         total_investment_principal = 0.0
         total_investment_value = 0.0
         for symbol in symbols:
