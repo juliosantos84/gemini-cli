@@ -1,4 +1,4 @@
-.gemini-cli/
+.gemini/
 .vscode/
 **/__pycache__/
 *.pyc

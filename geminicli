@@ -1,3 +1,5 @@
+#! /Users/julio/Development/gemini-cli/.gemini/bin/python3
+
 from service import TradeHistoryService
 from service import OrderService
 import sys
@@ -5,7 +7,7 @@ import argparse
 import json
 
 parser = argparse.ArgumentParser(
-    prog        = 'gemini-cli',
+    prog        = 'geminicli',
     description = '')
 parser.add_argument('command', type=str, default="summary", choices=['summary','buy', 'list'])
 parser.add_argument('-s', '--symbol', type=str, default='BTCUSD')

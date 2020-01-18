@@ -60,7 +60,7 @@ class TradeHistoryService(GeminiClient):
 
     def print_investment_summary(self, symbols):
         table = []
-        table.append(["SYMBOL","PRINCIPAL","AMOUNT", "AVG PRICE","CUR VALUE", "GAIN/LOSS", "BRK EVEN"])
+        table.append(["SYMBOL","PRINCIPAL","AMOUNT", "AVG PRICE","LAST PRICE", "CUR VALUE", "GAIN/LOSS", "BRK EVEN"])
         total_investment_principal = 0.0
         total_investment_value = 0.0
         for symbol in symbols:
@@ -78,10 +78,10 @@ class TradeHistoryService(GeminiClient):
             total_investment_principal += investment_principal
             total_investment_value += investment_value
 
-            table.append([symbol, investment_principal, total_crypto_investment, avg_price, investment_value, gain, break_even])
+            table.append([symbol, investment_principal, total_crypto_investment, avg_price, last_price, investment_value, gain, break_even])
         
         total_gain = total_investment_value - total_investment_principal
-        table.append(['TOTAL', total_investment_principal, 0.0, 0.0, total_investment_value, total_gain, 0.0])
+        table.append(['TOTAL', total_investment_principal, 0.0, 0.0, 0.0, total_investment_value, total_gain, 0.0])
 
         print (tabulate(table, headers="firstrow"))
 
