@@ -2,6 +2,9 @@ from .gemini_client import GeminiClient
 from .external_trades import ExternalTradesService
 import os
 import json
+from tabulate import tabulate
+
+USE_CACHE = True
 
 class TradeHistoryService(GeminiClient):
     def __init__(self):
@@ -10,12 +13,16 @@ class TradeHistoryService(GeminiClient):
             api_secret  = os.getenv("AUDITOR_API_SECRET"), 
             sandbox     = False,
         )
+        self._cache = {}
         self._external_trades_service = ExternalTradesService("/Users/julio/Development/gemini-cli/external_orders")
 
     def get_past_trades(self, symbol):
+        if USE_CACHE and symbol in self._cache:
+            return self._cache[symbol]
         past_trades = self.private_client.get_past_trades(symbol)
         external_trades = self._external_trades_service.get_orders(symbol)
-        return past_trades + external_trades
+        self._cache[symbol] = past_trades + external_trades
+        return self._cache[symbol]
         
     def calculate_total_crypto_investment(self, symbol):
         past_trades = self.get_past_trades(symbol)
@@ -52,7 +59,8 @@ class TradeHistoryService(GeminiClient):
         return avg_price
 
     def print_investment_summary(self, symbols):
-        print ("SYMBOL\tPRINCIPAL\tAVG PRICE\tCUR VALUE\tGAIN/LOSS\tBRK EVEN")
+        table = []
+        table.append(["SYMBOL","PRINCIPAL","AMOUNT", "AVG PRICE","CUR VALUE", "GAIN/LOSS", "BRK EVEN"])
         total_investment_principal = 0.0
         total_investment_value = 0.0
         for symbol in symbols:
@@ -70,9 +78,10 @@ class TradeHistoryService(GeminiClient):
             total_investment_principal += investment_principal
             total_investment_value += investment_value
 
-            print ("%s\t%08.2f\t$%08.2f\t%08.2f\t%08.2f\t%08.2f" % (symbol, investment_principal, avg_price, investment_value, gain, break_even))
+            table.append([symbol, investment_principal, total_crypto_investment, avg_price, investment_value, gain, break_even])
         
         total_gain = total_investment_value - total_investment_principal
-        total_break_even = total_investment_value - total_investment_principal
-        print ("%s\t%08.2f\t$%08.2f\t%08.2f\t%08.2f\t%08.2f" % ('TOTAL', total_investment_principal, 0.0, total_investment_value, total_gain, total_break_even))
+        table.append(['TOTAL', total_investment_principal, 0.0, 0.0, total_investment_value, total_gain, 0.0])
+
+        print (tabulate(table, headers="firstrow"))
 
