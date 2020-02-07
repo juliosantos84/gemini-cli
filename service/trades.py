@@ -4,6 +4,8 @@ import os
 import json
 from tabulate import tabulate
 
+import datetime
+
 USE_CACHE = True
 
 class TradeHistoryService(GeminiClient):
@@ -20,6 +22,11 @@ class TradeHistoryService(GeminiClient):
         if USE_CACHE and symbol in self._cache:
             return self._cache[symbol]
         past_trades = self.private_client.get_past_trades(symbol)
+        if isinstance(past_trades, dict):
+            # {"result": "error", "reason": "Maintenance", "message": "The Gemini Exchange is currently undergoing maintenance. Please check https://status.gemini.com/ for more information."}
+            raise Exception("Unable to get past trades, reason: %s\n\t%s"%(past_trades['reason'], past_trades['message']))
+
+        print (json.dumps(past_trades))
         external_trades = self._external_trades_service.get_orders(symbol)
         self._cache[symbol] = past_trades + external_trades
         return self._cache[symbol]
@@ -82,6 +89,7 @@ class TradeHistoryService(GeminiClient):
         
         total_gain = total_investment_value - total_investment_principal
         table.append(['TOTAL', total_investment_principal, 0.0, 0.0, 0.0, total_investment_value, total_gain, 0.0])
-
         print (tabulate(table, headers="firstrow"))
+        date = datetime.datetime.now()
+        print ("Prices as of %s" % (date.isoformat()))
 
