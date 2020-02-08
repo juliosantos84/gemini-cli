@@ -27,3 +27,11 @@ class GeminiClient:
 
     def timestamp_to_datetime(self, timestamp):
         datetime.fromtimestamp(timestamp)
+
+    def get_past_trades(self, symbol):
+            past_trades = self.private_client.get_past_trades(symbol)
+
+            if self.iserror(past_trades):
+                raise Exception("Unable to get past trades, reason: %s\n\t%s"%(past_trades['reason'], past_trades['message']))
+
+            return past_trades

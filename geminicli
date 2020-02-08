@@ -13,7 +13,7 @@ parser.add_argument('command', type=str, default="summary", choices=['summary','
 parser.add_argument('-s', '--symbol', type=str, default='BTCUSD')
 parser.add_argument('-a', '--amount', type=float, default=5.00)
 parser.add_argument('-p', '--price', type=float, default=7400)
-parser.add_argument('-r', '--subtract-alts', type=bool, default=False)
+parser.add_argument('-r', '--subtract-alts', action="store_true")
 args = parser.parse_args()
 
 
