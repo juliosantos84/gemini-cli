@@ -1,5 +1,6 @@
 from .gemini_client import GeminiClient
 from .external_trades import ExternalTradesService
+from .binance_client import BinanceClient
 import os
 import json
 from tabulate import tabulate
@@ -16,17 +17,17 @@ class TradeHistoryService(GeminiClient):
             sandbox     = False,
         )
         self._cache = {}
+        self._binance_client = BinanceClient()
         self._external_trades_service = ExternalTradesService("/Users/julio/Development/gemini-cli/external_orders")
 
     def get_past_trades(self, symbol):
         if USE_CACHE and symbol in self._cache:
             return self._cache[symbol]
         past_trades = self.private_client.get_past_trades(symbol)
-        if isinstance(past_trades, dict):
-            # {"result": "error", "reason": "Maintenance", "message": "The Gemini Exchange is currently undergoing maintenance. Please check https://status.gemini.com/ for more information."}
+
+        if self.iserror(past_trades):
             raise Exception("Unable to get past trades, reason: %s\n\t%s"%(past_trades['reason'], past_trades['message']))
 
-        print (json.dumps(past_trades))
         external_trades = self._external_trades_service.get_orders(symbol)
         self._cache[symbol] = past_trades + external_trades
         return self._cache[symbol]
@@ -65,7 +66,10 @@ class TradeHistoryService(GeminiClient):
         avg_price = nominator / denominator
         return avg_price
 
-    def print_investment_summary(self, symbols):
+    def get_base_pair(self, symbol):
+        return symbol[:3]
+
+    def print_investment_summary(self, symbols, subtract_alts=False):
         table = []
         table.append(["SYMBOL","PRINCIPAL","AMOUNT", "AVG PRICE","LAST PRICE", "CUR VALUE", "GAIN/LOSS", "BRK EVEN"])
         total_investment_principal = 0.0
@@ -76,6 +80,13 @@ class TradeHistoryService(GeminiClient):
             total_crypto_investment = self.calculate_total_crypto_investment(symbol)
             ticker = self.public_client.get_ticker(symbol)
             last_price = self.get_last_price(symbol)
+
+            if subtract_alts:
+                # Get alts bought with crypto investment
+                alts_purchased_total = self._binance_client.get_base_pair_total(symbol[:3])
+                print("Total {symbol} used to purchase alts: {amount}".format(symbol=symbol[:3], amount=alts_purchased_total))
+                # Subtract alts from crypt investment
+                total_crypto_investment -= alts_purchased_total
 
             investment_value = total_crypto_investment * last_price
             gain = investment_value - investment_principal
@@ -90,6 +101,7 @@ class TradeHistoryService(GeminiClient):
         total_gain = total_investment_value - total_investment_principal
         table.append(['TOTAL', total_investment_principal, 0.0, 0.0, 0.0, total_investment_value, total_gain, 0.0])
         print (tabulate(table, headers="firstrow"))
+        print ("")
         date = datetime.datetime.now()
         print ("Prices as of %s" % (date.isoformat()))
 

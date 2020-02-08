@@ -9,6 +9,10 @@ class GeminiClient:
         self.public_client = gemini.PublicClient()
         self.private_client = gemini.PrivateClient(self._auditor_api_key, self._auditor_api_secret)
     
+    def iserror(self, response):
+        # {"result": "error", "reason": "Maintenance", "message": "The Gemini Exchange is currently undergoing maintenance."}
+        return isinstance(response, dict) and response['result'] == 'error'
+            
     def get_last_price(self, symbol):
         ticker = self.public_client.get_ticker(symbol)
         return float(ticker['last'])
