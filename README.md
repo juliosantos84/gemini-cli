@@ -39,9 +39,8 @@ TOTAL         8432.9     0            0               0        5028.3        595
 ```
 
 ## reference
-### trade
+### gemini trade
 ```json
-# trade
 {
    "price":"7557.00",
    "amount":"0.02644552",
@@ -55,5 +54,29 @@ TOTAL         8432.9     0            0               0        5028.3        595
    "order_id":"8983511810",
    "exchange":"gemini",
    "is_auction_fill":false
+}
+```
+
+### binance order
+```json
+{
+  "symbol": "XLMETH",
+  "orderId": 16577921,
+  "orderListId": -1,
+  "clientOrderId": "android_1d3141864f0042afae9c7cb8bb21",
+  "price": "0.00063545",
+  "origQty": "627.00000000",
+  "executedQty": "627.00000000",
+  "cummulativeQuoteQty": "0.39842715",
+  "status": "FILLED",
+  "timeInForce": "GTC",
+  "type": "LIMIT",
+  "side": "BUY",
+  "stopPrice": "0.00000000",
+  "icebergQty": "0.00000000",
+  "time": 1524265728948,
+  "updateTime": 1524265732394,
+  "isWorking": true,
+  "origQuoteOrderQty": "0.00000000"
 }
 ```
