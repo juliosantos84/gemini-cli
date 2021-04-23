@@ -23,7 +23,13 @@ class GeminiClient:
         last = float(ticker['last'])
         return last
 
-    def list_prices(self, symbols=['BTCUSD', 'ETHUSD', 'LTCUSD', 'ZECUSD']):
+    def list_prices(
+        self, 
+        symbols=[
+            'BTCUSD', 'ETHUSD', 'LTCUSD', 'ZECUSD', 
+            'FILUSD', 'LINKUSD', 'BATUSD', 'MKRUSD', 'AAVEUSD', 'YFIUSD', '1INCHUSD'
+        ]
+        ):
         for s in symbols:
             ticker = self.public_client.get_ticker(s)
             bid = ticker['bid']

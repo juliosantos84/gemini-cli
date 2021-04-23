@@ -6,9 +6,27 @@ import sys
 import argparse
 import json
 
+SYMBOLS = [
+    'BTCUSD', 
+    'ETHUSD', 
+    'LTCUSD', 
+    'ZECUSD', 
+    'FILUSD', 
+    'LINKUSD', 
+    'BATUSD', 
+    'MKRUSD', 
+    'AAVEUSD', 
+    'YFIUSD', 
+    '1INCHUSD'
+]
 parser = argparse.ArgumentParser(
     prog        = 'geminicli',
-    description = '')
+    description = 'Connects to gemini and binance to print investment info.\n'
+                  'Configure:\n\n'
+                  'GEMINI_AUDITOR_API_KEY\n\n'
+                  'GEMINI_AUDITOR_API_SECRET,\n\n'
+                  'BINANCE_API_KEY\n\n'
+                  'BINANCE_API_SECRET\n\n')
 parser.add_argument('command', type=str, default="summary", choices=['summary','buy', 'list'])
 parser.add_argument('-s', '--symbol', type=str, default='BTCUSD')
 parser.add_argument('-a', '--amount', type=float, default=5.00)
@@ -19,7 +37,7 @@ args = parser.parse_args()
 
 if args.command == 'summary':
     th = TradeHistoryService()
-    th.print_investment_summary(symbols=['BTCUSD','ETHUSD', 'ZECUSD', 'LTCUSD'], subtract_alts=args.subtract_alts)
+    th.print_investment_summary(symbols=SYMBOLS, subtract_alts=args.subtract_alts)
 elif args.command == 'buy':
     o = OrderService()
     print ("Buying $%f of %s @ %f " % (args.amount, args.symbol, args.price))
