@@ -9,11 +9,8 @@ virtualenv -p <PATH_TO_PYTHON3> .gemini-cli && source .gemini-cli/bin/activate
 ```bash
 pip3 install -r requirements.txt
 ```
-- Configure API secrets
-```bash
-export AUDITOR_API_KEY="GEMINI_API_KEY"
-export AUDITOR_API_SECRET="GEMINI_API_SECRET"
-```
+- Configure Gemini and Binance API secrets in `/.env`
+
 1. Update geminicli to use the python3 installed by virtualenv:
 ```bash
 #! /Users/julio/Development/gemini-cli/.gemini/bin/python3
