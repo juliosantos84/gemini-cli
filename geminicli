@@ -1,4 +1,4 @@
-#! /Users/julio/Development/gemini-cli/.gemini/bin/python3
+# Run using `python geminicli [option]`
 
 from service import TradeHistoryService
 from service import OrderService
@@ -20,6 +20,16 @@ SYMBOLS = [
     '1INCHUSD',
     'COMPUSD',
     'MATICUSD',
+    # Added 1/29/2022
+    'MANAUSD',
+    'UNIUSD',
+    'LUNAUSD',
+    'AXSUSD',
+    'AMPUSD',
+    'LRCUSD',
+    'ENSUSD',
+
+
 ]
 
 parser = argparse.ArgumentParser(

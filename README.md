@@ -3,22 +3,13 @@
 ## setup
 1. create a virtual environment
 ```bash
-virtualenv -p <PATH_TO_PYTHON3> .gemini-cli && source .gemini-cli/bin/activate
+virtualenv -p <PATH_TO_PYTHON3> .env && source .env/bin/activate
 ```
 1. install requirements
 ```bash
 pip3 install -r requirements.txt
 ```
-- Configure Gemini and Binance API secrets in `/.env`
-
-1. Update geminicli to use the python3 installed by virtualenv:
-```bash
-#! /Users/julio/Development/gemini-cli/.gemini/bin/python3
-```
-1. Add gemini-cli project folder to your path, i.e.
-```bash
-export PATH="/Users/julio/Development/gemini-cli:$PATH"
-```
+- Configure Gemini and Binance API secrets in `/.env` and run the script.
 
 ## usage
 
