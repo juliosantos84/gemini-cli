@@ -9,15 +9,15 @@ import json
 SYMBOLS = [
     'BTCUSD', 
     'ETHUSD', 
-    'LTCUSD', 
-    'ZECUSD', 
-    'FILUSD', 
+    # 'LTCUSD', 
+    # 'ZECUSD', 
+    # 'FILUSD', 
     'LINKUSD', 
     'BATUSD', 
     'MKRUSD', 
     'AAVEUSD', 
     'YFIUSD', 
-    '1INCHUSD',
+    # '1INCHUSD',
     'COMPUSD',
     'MATICUSD',
     # Added 1/29/2022
@@ -28,6 +28,9 @@ SYMBOLS = [
     'AMPUSD',
     'LRCUSD',
     'ENSUSD',
+    # Added 4/3/2022
+    'SANDUSD',
+    'SOLUSD',
 
 
 ]

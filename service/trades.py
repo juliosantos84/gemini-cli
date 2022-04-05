@@ -70,6 +70,7 @@ class TradeHistoryService():
         table.append(["SYMBOL","PRINCIPAL","AMOUNT", "AVG PRICE","LAST PRICE", "CUR VALUE", "GAIN/LOSS", "BRK EVEN"])
         total_investment_principal = 0.0
         total_investment_value = 0.0
+        portfolio_percents = {}
         for symbol in symbols:
             avg_price = self.calculate_avg_price(symbol)
             investment_principal = self.calculate_total_fiat_investment(symbol)
@@ -92,12 +93,21 @@ class TradeHistoryService():
             total_investment_principal += investment_principal
             total_investment_value += investment_value
 
+            portfolio_percents[symbol] = {
+                'principal': investment_principal,
+                'gain': gain
+            }
+            
+
             table.append([symbol, investment_principal, total_crypto_investment, avg_price, last_price, investment_value, gain, break_even])
         
         total_gain = total_investment_value - total_investment_principal
         table.append(['TOTAL', total_investment_principal, 0.0, 0.0, 0.0, total_investment_value, total_gain, 0.0])
+        
         print (tabulate(table, headers="firstrow"))
         print ("")
         date = datetime.datetime.now()
         print ("Prices as of %s" % (date.isoformat()))
 
+        if total_investment_value > 1000000:
+            print("\nCongrats, you are a crypto millionaire!")
