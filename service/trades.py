@@ -56,7 +56,8 @@ class TradeHistoryService():
             nominator += (amount * price)
             denominator += amount
 
-        avg_price = nominator / denominator
+        avg_price = (nominator / denominator) if denominator != 0 else 0
+
         return avg_price
 
     def get_base_pair(self, symbol):
@@ -88,8 +89,8 @@ class TradeHistoryService():
             investment_value = total_crypto_investment * last_price
             gain = investment_value - investment_principal
 
-            break_even = investment_principal / total_crypto_investment
-
+            break_even = investment_principal / total_crypto_investment if total_crypto_investment != 0 else 0
+            
             total_investment_principal += investment_principal
             total_investment_value += investment_value
 
